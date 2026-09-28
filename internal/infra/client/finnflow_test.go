@@ -17,7 +17,7 @@ func TestObtenerCreditosPorRut_Success(t *testing.T) {
 		assert.Equal(t, "secret", r.Header.Get("X-Client-Secret"))
 		
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"data": [{"NumeroOperacion": "123"}]}`))
+		_, _ = w.Write([]byte(`{"data": [{"NumeroOperacion": "123"}]}`))
 	}))
 	defer server.Close()
 
@@ -46,7 +46,7 @@ func TestObtenerCreditosPorRut_NotFound(t *testing.T) {
 func TestObtenerCreditosPorRut_Error(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`Internal Server Error`))
+		_, _ = w.Write([]byte(`Internal Server Error`))
 	}))
 	defer server.Close()
 
@@ -61,7 +61,7 @@ func TestObtenerCreditosPorRut_Error(t *testing.T) {
 func TestObtenerCreditosPorRut_DecodeError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`invalid json`))
+		_, _ = w.Write([]byte(`invalid json`))
 	}))
 	defer server.Close()
 

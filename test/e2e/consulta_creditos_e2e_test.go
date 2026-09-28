@@ -50,7 +50,7 @@ func TestE2E_ConsultaCreditos_HappyPath(t *testing.T) {
 		
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{
+		_, _ = w.Write([]byte(`{
 			"data": [
 				{
 					"numeroOperacionOriginal": "OP-12345",
@@ -121,7 +121,7 @@ func TestE2E_ConsultaCreditos_RutInvalidoLegacyBug(t *testing.T) {
 	assert.Equal(t, http.StatusInternalServerError, w.Code)
 	
 	var response map[string]interface{}
-	json.Unmarshal(w.Body.Bytes(), &response)
+	_ = json.Unmarshal(w.Body.Bytes(), &response)
 	
 	// Validamos que todo el stack convirtió el error de validación 402 en un 500 legacy.
 	assert.Contains(t, response["descError"], "402 PAYMENT_REQUIRED")
