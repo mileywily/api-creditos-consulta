@@ -1,0 +1,23 @@
+name: Main Pipeline
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+concurrency:
+  group: "${{ github.ref }}"
+  cancel-in-progress: true
+
+env:
+  NULLPLATFORM_API_KEY: ${{ secrets.NULLPLATFORM_API_KEY }}
+
+jobs:
+  pipeline:
+    uses: falabella-regulado/one-pipeline/.github/workflows/go-build-pipeline.yml@v4
+    with:
+      NULLPLATFORM_API_KEY: $NULLPLATFORM_API_KEY
+      DEPLOY_PLATFORM: 'null-platform'
+    secrets: inherit
