@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 func main() {
@@ -29,11 +30,15 @@ func main() {
 			},
 		}
 		
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response)
 	})
 
 	fmt.Println("Mock FinnFlow server corriendo en http://localhost:9090")
-	if err := http.ListenAndServe(":9090", nil); err != nil {
+	server := &http.Server{
+		Addr:              ":9090",
+		ReadHeaderTimeout: 5 * time.Second,
+	}
+	if err := server.ListenAndServe(); err != nil {
 		fmt.Println("Error al iniciar el mock:", err)
 	}
 }
