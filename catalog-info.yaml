@@ -1,66 +1,60 @@
 apiVersion: backstage.io/v1alpha1
-kind: API
-metadata:
-  name: api-creditos-consulta
-  description: Consulta de creditos hipotecarios asociados
-  labels:
-    country: chile
-    portfolio: sin-identificar
-    equipo: equipo que crea la api
-  tags:
-    - api
-  links:
-    - url: url-de-apicurio
-      title: Apicurio
-      icon: docs
-spec:
-  type: openapi
-  owner: group:fiftech_clientes
-  lifecycle: pre-production
-  system: customer-management-chile
-  #Copy paste del OAS
-  definition: |
-    openapi: "3.0.0"
-    info:
-      version: 1.0
-      title: Users
-    servers:
-      - url: http://integracion-k8s-dev.fif.tech
-      - url: http://integracion-k8s-qa.fif.tech
-    paths:
-      /fifcl/v1/users:
-        post:
-          summary: Crear un usuario
----
-apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: api-api-creditos-consulta
-  description: Consulta de creditos hipotecarios asociados
+  name: api-creditos-consulta
+  description: Microservicio de consulta de creditos hipotecarios
   labels:
-    country: chile
-    capability: fraud-and-aml-risks
+    country: cl
+    capability: prestamos
     portfolio: tecnologico
-    equipo: equipo que crea la api
+    equipo: teamDev
   tags:
     - rest
     - go
   links:
-    - url: url-obtenida-de-compartir-de-confluence-del-RFC
+    - url: http://RFC
       title: RFC
       icon: docs
-    - url: https://app.datadoghq.com/dashboard/mfy-amg-bss/integraciones-cl-consolidada?from_ts=1688656754013&to_ts=1688660354013&live=true
+    - url: https://app.datadoghq.com/dashboard/mfy-amg-bss/integraciones-cl-consolidada
       title: APM DataDog
       icon: dashboard
 spec:
   type: service
-  owner: group:fiftech_clientes
+  owner: group:fiftech_integraciones_country
   lifecycle: pre-production
-  system: customer-management-chile
+  system: prestamos
   providesApis:
     - api-creditos-consulta
-  consumesApis:
-    - component:example
-  dependsOn:
-    - resource:x-database
-    - resource:x-osb
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: api-creditos-consulta-api
+  description: API definition for api-creditos-consulta
+  labels:
+    country: cl
+    portfolio: tecnologico
+    equipo: teamDev
+  tags:
+    - api
+  links:
+    - url: http://apicurio
+      title: Apicurio
+      icon: docs
+spec:
+  type: openapi
+  owner: group:fiftech_integraciones
+  lifecycle: pre-production
+  system: prestamos
+  definition: |
+    openapi: "3.0.0"
+    info:
+      version: 1.0.0
+      title: API Creditos Consulta
+    servers:
+      - url: http://integracion-k8s-dev.fif.tech
+      - url: http://integracion-k8s-qa.fif.tech
+    paths:
+      /api/creditos/consulta/:
+        post:
+          summary: Consulta creditos asociados a un RUT
