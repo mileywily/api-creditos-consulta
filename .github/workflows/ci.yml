@@ -1,0 +1,38 @@
+name: Go CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.27'
+        cache: false # Desactivamos la caché aquí porque el linter ya la gestiona
+
+    - name: Install dependencies
+      run: go mod download
+
+    - name: Run golangci-lint
+      uses: golangci/golangci-lint-action@v6
+      with:
+        version: latest
+        args: --timeout=5m
+
+    - name: Run Tests with Coverage
+      run: go test -v -coverprofile=coverage.txt -covermode=atomic ./...
+
+    - name: Show Coverage Summary
+      run: go tool cover -func=coverage.txt
+
+    - name: Build
+      run: go build -v ./cmd/api/...
